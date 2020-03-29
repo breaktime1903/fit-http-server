@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-import socket,os,sys,time,website_gen,_thread
+import socket,os,sys,time,website_gen,_thread,json
 #用python3编写的HTTP服务器
 connected=False
-localaddress='192.168.1.13'
+localaddress='127.0.0.1'
 port=8080
 index_dir='./website'
 coding='utf-8'
@@ -61,6 +61,14 @@ def main():
         _thread.start_new_thread(handler,(client_socket,))
         #handler(client_socket)
 while True:
+    try:
+        json_setting=open('setting.json','r')
+        setting=json.loads(json_setting.read())
+        localaddress=setting['IP']
+        port=setting['PORT']
+        json_setting.close()
+    except:
+        print('无法读取配置文件')
     try:
         main()
     except KeyboardInterrupt:
